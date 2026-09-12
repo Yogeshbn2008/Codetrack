@@ -5,7 +5,7 @@ function EditProblem({ problems, onUpdate }) {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const existing = problems.find((p) => p.id === Number(id))
+  const existing = problems.find((p) => p._id === id)
 
   const [form, setForm] = useState({
     title: existing?.title || "",
@@ -25,7 +25,7 @@ function EditProblem({ problems, onUpdate }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onUpdate(existing.id, form)
+    onUpdate(existing._id, form)
     navigate('/problems')
   }
 

@@ -7,9 +7,9 @@ function ProblemCard({ problem, onDelete }) {
       <p>{problem.platform} · {problem.topic} · {problem.difficulty}</p>
       {problem.status === "solved" ? <span>✅ Solved</span> : <span>🕓 Attempted</span>}
       {problem.notes && <p><em>{problem.notes}</em></p>}
-      <Link to={`/edit/${problem.id}`}>Edit</Link>
+      <Link to={`/edit/${problem._id}`}>Edit</Link>
       {' '}
-      <button onClick={() => onDelete(problem.id)}>Delete</button>
+      <button onClick={() => onDelete(problem._id)}>Delete</button>
     </div>
   )
 }

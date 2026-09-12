@@ -21,12 +21,12 @@ function App() {
 
   const deleteProblem = async (id) => {
     await apiDeleteProblem(id)
-    setProblems(problems.filter((p) => p.id !== id))
+    setProblems(problems.filter((p) => p._id !== id))
   }
 
   const updateProblem = async (id, updatedData) => {
     const updated = await apiUpdateProblem(id, updatedData)
-    setProblems(problems.map((p) => (p.id === id ? updated : p)))
+    setProblems(problems.map((p) => (p._id === id ? updated : p)))
   }
 
   return (
