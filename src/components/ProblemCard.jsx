@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function ProblemCard({ problem, onDelete }) {
   return (
     <div style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
@@ -5,6 +7,8 @@ function ProblemCard({ problem, onDelete }) {
       <p>{problem.platform} · {problem.topic} · {problem.difficulty}</p>
       {problem.status === "solved" ? <span>✅ Solved</span> : <span>🕓 Attempted</span>}
       {problem.notes && <p><em>{problem.notes}</em></p>}
+      <Link to={`/edit/${problem.id}`}>Edit</Link>
+      {' '}
       <button onClick={() => onDelete(problem.id)}>Delete</button>
     </div>
   )
