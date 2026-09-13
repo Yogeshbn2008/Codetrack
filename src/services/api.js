@@ -20,3 +20,14 @@ export const updateProblem = async (id, updatedData) => {
 export const deleteProblem = async (id) => {
   await axios.delete(`${API_URL}/${id}`)
 }
+const AUTH_URL = 'http://localhost:5000/api/auth'
+
+export const registerUser = async (userData) => {
+  const res = await axios.post(`${AUTH_URL}/register`, userData)
+  return res.data
+}
+
+export const loginUser = async (credentials) => {
+  const res = await axios.post(`${AUTH_URL}/login`, credentials)
+  return res.data
+}
