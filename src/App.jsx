@@ -14,9 +14,11 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || null)
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
 
-  useEffect(() => {
+ useEffect(() => {
+  if (token) {
     getProblems().then(setProblems)
-  }, [])
+  }
+}, [token])
 
   const handleLogin = (newToken, newUser) => {
     localStorage.setItem('token', newToken)
@@ -52,7 +54,7 @@ function App() {
       <Navbar user={user} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/problems" element={<Problems problems={problems} onDelete={deleteProblem} />} />
+        <Route path="/problems" element={<Problems onDelete={deleteProblem} />} />
         <Route path="/add" element={<AddProblem onAdd={addProblem} />} />
         <Route path="/edit/:id" element={<EditProblem problems={problems} onUpdate={updateProblem} />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
