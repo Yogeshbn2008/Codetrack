@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getStats } from '../services/api'
+import './Dashboard.css'
 
 function Dashboard() {
   const [stats, setStats] = useState(null)
@@ -8,41 +9,85 @@ function Dashboard() {
     getStats().then(setStats)
   }, [])
 
-  if (!stats) return <p>Loading dashboard...</p>
+  if (!stats) return <p style={{ padding: 40 }}>Loading dashboard...</p>
+
+  const maxTopicCount = Math.max(...Object.values(stats.byTopic), 1)
 
   return (
-    <div>
-      <h2>Dashboard</h2>
-
-      <div>
-        <strong>Total Problems:</strong> {stats.total}
-      </div>
-      <div>
-        <strong>Solved:</strong> {stats.solved} · <strong>Attempted:</strong> {stats.attempted}
+    <div className="dashboard">
+      <div className="dashboard-welcome">
+        <h2>Welcome back 👋</h2>
+        <p>Keep solving. Keep improving.</p>
       </div>
 
-      <h3>By Difficulty</h3>
-      <ul>
-        <li>Easy: {stats.byDifficulty.Easy}</li>
-        <li>Medium: {stats.byDifficulty.Medium}</li>
-        <li>Hard: {stats.byDifficulty.Hard}</li>
-      </ul>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <h3>Total Problems</h3>
+          <p>{stats.total}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Solved</h3>
+          <p>{stats.solved}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Attempted</h3>
+          <p>{stats.attempted}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Topics Covered</h3>
+          <p>{Object.keys(stats.byTopic).length}</p>
+        </div>
+      </div>
 
-      <h3>By Topic</h3>
-      <ul>
-        {Object.entries(stats.byTopic).map(([topic, count]) => (
-          <li key={topic}>{topic}: {count}</li>
-        ))}
-      </ul>
+      <div className="dashboard-panels">
+        <div className="panel">
+          <h3>By Difficulty</h3>
+          {["Easy", "Medium", "Hard"].map((level) => {
+            const pct = stats.total ? Math.round((stats.byDifficulty[level] / stats.total) * 100) : 0
+            return (
+              <div className="progress-row" key={level}>
+                <div className="progress-row-label">
+                  <span>{level}</span>
+                  <span>{stats.byDifficulty[level]}</span>
+                </div>
+                <div className="progress-bar-bg">
+                  <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
 
-      <h3>Recent Problems</h3>
-      <ul>
-        {stats.recent.map((p) => (
-          <li key={p._id}>
-            {p.title} — {p.difficulty} {p.status === "solved" ? "✅" : "🕓"}
-          </li>
-        ))}
-      </ul>
+        <div className="panel">
+          <h3>Topic Progress</h3>
+          {Object.entries(stats.byTopic).map(([topic, count]) => {
+            const pct = Math.round((count / maxTopicCount) * 100)
+            return (
+              <div className="progress-row" key={topic}>
+                <div className="progress-row-label">
+                  <span>{topic}</span>
+                  <span>{count}</span>
+                </div>
+                <div className="progress-bar-bg">
+                  <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="panel">
+        <h3>Recent Problems</h3>
+        <ul className="recent-list">
+          {stats.recent.map((p) => (
+            <li key={p._id}>
+              <span>{p.title}</span>
+              <span>{p.difficulty} {p.status === "solved" ? "✅" : "🕓"}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
