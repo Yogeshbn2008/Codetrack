@@ -1,40 +1,41 @@
 import { useState, useEffect } from 'react'
 import ProblemCard from '../components/ProblemCard'
 import { getProblems } from '../services/api'
+import './Problems.css'
 
 function Problems({ onDelete }) {
   const [problems, setProblems] = useState([])
-  const [search, setSearch] = useState("")
-  const [topic, setTopic] = useState("")
-  const [difficulty, setDifficulty] = useState("")
-  const [status, setStatus] = useState("")
+  const [filters, setFilters] = useState({ search: "", topic: "", difficulty: "", status: "" })
 
-  const fetchFiltered = () => {
-    const filters = {}
-    if (search) filters.search = search
-    if (topic) filters.topic = topic
-    if (difficulty) filters.difficulty = difficulty
-    if (status) filters.status = status
-
+  const fetchProblems = () => {
     getProblems(filters).then(setProblems)
   }
 
   useEffect(() => {
-    fetchFiltered()
-  }, [search, topic, difficulty, status])
+    fetchProblems()
+  }, [filters])
+
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value })
+  }
+
+  const handleDelete = async (id) => {
+    await onDelete(id)
+    fetchProblems()
+  }
 
   return (
-    <div>
+    <div className="problems-page">
       <h2>My Problems</h2>
 
-      <div>
+      <div className="filter-bar">
         <input
-          placeholder="Search by title..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          name="search"
+          placeholder="🔍 Search problems..."
+          value={filters.search}
+          onChange={handleFilterChange}
         />
-
-        <select value={topic} onChange={(e) => setTopic(e.target.value)}>
+        <select name="topic" value={filters.topic} onChange={handleFilterChange}>
           <option value="">All Topics</option>
           <option value="Array">Array</option>
           <option value="DP">DP</option>
@@ -42,15 +43,13 @@ function Problems({ onDelete }) {
           <option value="Graph">Graph</option>
           <option value="Recursion">Recursion</option>
         </select>
-
-        <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+        <select name="difficulty" value={filters.difficulty} onChange={handleFilterChange}>
           <option value="">All Difficulties</option>
           <option value="Easy">Easy</option>
           <option value="Medium">Medium</option>
           <option value="Hard">Hard</option>
         </select>
-
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+        <select name="status" value={filters.status} onChange={handleFilterChange}>
           <option value="">All Statuses</option>
           <option value="solved">Solved</option>
           <option value="attempted">Attempted</option>
@@ -58,14 +57,10 @@ function Problems({ onDelete }) {
       </div>
 
       {problems.length === 0 ? (
-        <p>No problems match your filters.</p>
+        <p className="empty-state">No problems match your filters.</p>
       ) : (
         problems.map((problem) => (
-          <ProblemCard
-            key={problem._id}
-            problem={problem}
-            onDelete={(id) => { onDelete(id); fetchFiltered() }}
-          />
+          <ProblemCard key={problem._id} problem={problem} onDelete={handleDelete} />
         ))
       )}
     </div>

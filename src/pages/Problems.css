@@ -1,0 +1,43 @@
+.problems-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.problems-page h2 {
+  margin-bottom: 20px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-bar input,
+.filter-bar select {
+  background: #181c25;
+  border: 1px solid #292e39;
+  color: #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.filter-bar input {
+  flex: 1;
+  min-width: 180px;
+}
+
+.filter-bar input:focus,
+.filter-bar select:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.empty-state {
+  color: #94a3b8;
+  text-align: center;
+  padding: 40px 0;
+}

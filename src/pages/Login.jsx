@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { loginUser } from '../services/api'
+import './Forms.css'
 
 function Login({ onLogin }) {
   const [form, setForm] = useState({ email: "", password: "" })
@@ -24,19 +25,23 @@ function Login({ onLogin }) {
   }
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="form-page">
+      <h2>Welcome Back</h2>
+      {error && <div className="form-error">{error}</div>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+        <div className="form-group">
+          <label>Email</label>
+          <input name="email" type="email" value={form.email} onChange={handleChange} required />
         </div>
-        <div>
-          <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+        <div className="form-group">
+          <label>Password</label>
+          <input name="password" type="password" value={form.password} onChange={handleChange} required />
         </div>
-        <button type="submit">Login</button>
+        <button className="form-submit-btn" type="submit">Login</button>
       </form>
-      <p>Don't have an account? <Link to="/register">Register</Link></p>
+      <div className="form-footer-link">
+        Don't have an account? <Link to="/register">Register</Link>
+      </div>
     </div>
   )
 }

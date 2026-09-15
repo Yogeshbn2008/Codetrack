@@ -1,0 +1,98 @@
+.problem-card {
+  background: #181c25;
+  border: 1px solid #292e39;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  transition: 0.15s ease;
+}
+
+.problem-card:hover {
+  border-color: #6366f1;
+  transform: translateY(-1px);
+}
+
+.problem-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.problem-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.status-badge {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.status-solved {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.status-attempted {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+}
+
+.problem-card-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: #21262f;
+  color: #cbd5e1;
+}
+
+.problem-card-notes {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0 0 14px 0;
+  font-style: italic;
+}
+
+.problem-card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-edit, .btn-delete {
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-edit {
+  background: #21262f;
+  color: #cbd5e1;
+}
+
+.btn-edit:hover {
+  background: #292e39;
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+
+.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import './Forms.css'
 
 function EditProblem({ problems, onUpdate }) {
   const { id } = useParams()
@@ -16,7 +17,7 @@ function EditProblem({ problems, onUpdate }) {
   })
 
   if (!existing) {
-    return <p>Problem not found.</p>
+    return <p style={{ padding: 40 }}>Problem not found.</p>
   }
 
   const handleChange = (e) => {
@@ -30,29 +31,34 @@ function EditProblem({ problems, onUpdate }) {
   }
 
   return (
-    <div>
+    <div className="form-page">
       <h2>Edit Problem</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
+          <label>Problem Title</label>
           <input name="title" value={form.title} onChange={handleChange} required />
         </div>
-        <div>
+        <div className="form-group">
+          <label>Platform</label>
           <input name="platform" value={form.platform} onChange={handleChange} />
         </div>
-        <div>
+        <div className="form-group">
+          <label>Topic</label>
           <input name="topic" value={form.topic} onChange={handleChange} />
         </div>
-        <div>
+        <div className="form-group">
+          <label>Difficulty</label>
           <select name="difficulty" value={form.difficulty} onChange={handleChange}>
             <option>Easy</option>
             <option>Medium</option>
             <option>Hard</option>
           </select>
         </div>
-        <div>
+        <div className="form-group">
+          <label>Notes / Approach</label>
           <textarea name="notes" value={form.notes} onChange={handleChange} />
         </div>
-        <button type="submit">Save Changes</button>
+        <button className="form-submit-btn" type="submit">Save Changes</button>
       </form>
     </div>
   )
