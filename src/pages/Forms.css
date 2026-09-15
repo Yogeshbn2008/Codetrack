@@ -85,3 +85,9 @@
   color: #818cf8;
   text-decoration: none;
 }
+@media (max-width: 540px) {
+  .form-page {
+    margin: 30px 16px;
+    padding: 24px 20px;
+  }
+}

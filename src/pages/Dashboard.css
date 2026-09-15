@@ -110,3 +110,20 @@
 .recent-list li:last-child {
   border-bottom: none;
 }
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dashboard-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard {
+    padding: 24px 16px;
+  }
+}

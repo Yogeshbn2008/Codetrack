@@ -41,3 +41,12 @@
   text-align: center;
   padding: 40px 0;
 }
+@media (max-width: 600px) {
+  .filter-bar {
+    flex-direction: column;
+  }
+  .filter-bar input,
+  .filter-bar select {
+    width: 100%;
+  }
+}
