@@ -1,0 +1,81 @@
+.problem-form-page {
+  max-width: 640px;
+  margin: 50px auto;
+  padding: 36px 40px;
+  background: #181c25;
+  border: 1px solid #292e39;
+  border-radius: 14px;
+}
+
+.problem-form-page h2 {
+  margin: 0 0 24px 0;
+  font-size: 20px;
+}
+
+.problem-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.problem-form-page input,
+.problem-form-page select,
+.problem-form-page textarea {
+  width: 100%;
+  background: #0f1117;
+  border: 1px solid #292e39;
+  color: #e5e7eb;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.problem-form-page textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.problem-form-page input:focus,
+.problem-form-page select:focus,
+.problem-form-page textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.form-submit-btn {
+  width: 100%;
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.form-submit-btn:hover {
+  background: #4f52d9;
+}
+
+@media (max-width: 640px) {
+  .problem-form-page {
+    margin: 30px 16px;
+    padding: 24px 20px;
+  }
+  .problem-form-row {
+    grid-template-columns: 1fr;
+  }
+}

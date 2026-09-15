@@ -1,12 +1,9 @@
 import { useState } from 'react'
+import './ProblemForm.css'
 
 function AddProblem({ onAdd }) {
   const [form, setForm] = useState({
-    title: "",
-    platform: "",
-    topic: "",
-    difficulty: "Easy",
-    notes: ""
+    title: "", platform: "", topic: "", difficulty: "Easy", notes: ""
   })
 
   const handleChange = (e) => {
@@ -14,56 +11,46 @@ function AddProblem({ onAdd }) {
   }
 
   const handleSubmit = (e) => {
-  e.preventDefault()
-  onAdd(form)
-  setForm({ title: "", platform: "", topic: "", difficulty: "Easy", notes: "" })
-}
+    e.preventDefault()
+    onAdd(form)
+    setForm({ title: "", platform: "", topic: "", difficulty: "Easy", notes: "" })
+  }
 
   return (
-    <div>
+    <div className="problem-form-page">
       <h2>Add a Problem</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <input
-            name="title"
-            placeholder="Problem title"
-            value={form.title}
-            onChange={handleChange}
-            required
-          />
+        <div className="form-group">
+          <label>Problem Title</label>
+          <input name="title" placeholder="e.g. Two Sum" value={form.title} onChange={handleChange} required />
         </div>
-        <div>
-          <input
-            name="platform"
-            placeholder="Platform (LeetCode, etc.)"
-            value={form.platform}
-            onChange={handleChange}
-          />
+
+        <div className="problem-form-row">
+          <div className="form-group">
+            <label>Platform</label>
+            <input name="platform" placeholder="LeetCode" value={form.platform} onChange={handleChange} />
+          </div>
+          <div className="form-group">
+            <label>Topic</label>
+            <input name="topic" placeholder="Array" value={form.topic} onChange={handleChange} />
+          </div>
         </div>
-        <div>
-          <input
-            name="topic"
-            placeholder="Topic (Array, DP, etc.)"
-            value={form.topic}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
+
+        <div className="form-group">
+          <label>Difficulty</label>
           <select name="difficulty" value={form.difficulty} onChange={handleChange}>
             <option>Easy</option>
             <option>Medium</option>
             <option>Hard</option>
           </select>
         </div>
-        <div>
-          <textarea
-            name="notes"
-            placeholder="Notes / approach"
-            value={form.notes}
-            onChange={handleChange}
-          />
+
+        <div className="form-group">
+          <label>Notes / Approach</label>
+          <textarea name="notes" placeholder="Explain your approach..." value={form.notes} onChange={handleChange} />
         </div>
-        <button type="submit">Add Problem</button>
+
+        <button className="form-submit-btn" type="submit">+ Add Problem</button>
       </form>
     </div>
   )
