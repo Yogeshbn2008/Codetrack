@@ -3,7 +3,12 @@ import './Forms.css'
 
 function AddProblem({ onAdd }) {
   const [form, setForm] = useState({
-    title: "", platform: "", topic: "", difficulty: "Easy", notes: ""
+    title: "",
+    platform: "",
+    topic: "",
+    difficulty: "Easy",
+    status: "attempted",
+    notes: ""
   })
 
   const handleChange = (e) => {
@@ -13,7 +18,7 @@ function AddProblem({ onAdd }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     onAdd(form)
-    setForm({ title: "", platform: "", topic: "", difficulty: "Easy", notes: "" })
+    setForm({ title: "", platform: "", topic: "", difficulty: "Easy", status: "attempted", notes: "" })
   }
 
   return (
@@ -38,6 +43,13 @@ function AddProblem({ onAdd }) {
             <option>Easy</option>
             <option>Medium</option>
             <option>Hard</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Status</label>
+          <select name="status" value={form.status} onChange={handleChange}>
+            <option value="attempted">Attempted</option>
+            <option value="solved">Solved</option>
           </select>
         </div>
         <div className="form-group">
