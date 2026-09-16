@@ -4,11 +4,14 @@ import './Navbar.css'
 function Navbar({ user, onLogout }) {
   return (
     <nav className="navbar">
-      <div className="navbar-logo">⚡ CodeTrack</div>
+      <Link to="/" className="navbar-logo">⚡ CodeTrack</Link>
       <div className="navbar-links">
-        <Link to="/">Dashboard</Link>
-        <Link to="/problems">Problems</Link>
-        <Link to="/add">Add Problem</Link>
+        {user && (
+          <>
+            <Link to="/problems">Problems</Link>
+            <Link to="/add">Add Problem</Link>
+          </>
+        )}
       </div>
       <div className="navbar-right">
         {user ? (

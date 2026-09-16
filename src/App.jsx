@@ -8,6 +8,7 @@ import EditProblem from './pages/EditProblem'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import { getProblems, addProblem as apiAddProblem, updateProblem as apiUpdateProblem, deleteProblem as apiDeleteProblem } from './services/api'
+import Landing from './pages/Landing'
 
 function App() {
   const [problems, setProblems] = useState([])
@@ -53,7 +54,7 @@ function App() {
     <BrowserRouter>
       <Navbar user={user} onLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={user ? <Dashboard /> : <Landing />} />
         <Route path="/problems" element={<Problems onDelete={deleteProblem} />} />
         <Route path="/add" element={<AddProblem onAdd={addProblem} />} />
         <Route path="/edit/:id" element={<EditProblem problems={problems} onUpdate={updateProblem} />} />
