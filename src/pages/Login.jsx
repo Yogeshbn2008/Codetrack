@@ -18,7 +18,7 @@ function Login({ onLogin }) {
     try {
       const data = await loginUser(form)
       onLogin(data.token, data.user)
-      navigate('/problems')
+      navigate('/dashboard')
     } catch (err) {
       setError(err.response?.data?.message || "Login failed")
     }

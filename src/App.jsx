@@ -54,7 +54,8 @@ function App() {
     <BrowserRouter>
       <Navbar user={user} onLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={user ? <Dashboard /> : <Landing />} />
+       <Route path="/" element={<Landing />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/problems" element={<Problems onDelete={deleteProblem} />} />
         <Route path="/add" element={<AddProblem onAdd={addProblem} />} />
         <Route path="/edit/:id" element={<EditProblem problems={problems} onUpdate={updateProblem} />} />

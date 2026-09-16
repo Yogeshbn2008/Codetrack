@@ -8,6 +8,7 @@ function Navbar({ user, onLogout }) {
       <div className="navbar-links">
         {user && (
           <>
+            <Link to="/dashboard">Dashboard</Link>
             <Link to="/problems">Problems</Link>
             <Link to="/add">Add Problem</Link>
           </>
