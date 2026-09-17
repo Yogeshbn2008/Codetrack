@@ -9,12 +9,14 @@ function EditProblem({ problems, onUpdate }) {
   const existing = problems.find((p) => p._id === id)
 
   const [form, setForm] = useState({
-    title: existing?.title || "",
-    platform: existing?.platform || "",
-    topic: existing?.topic || "",
-    difficulty: existing?.difficulty || "Easy",
-    status: existing?.status || "attempted",
-    notes: existing?.notes || ""
+  title: existing?.title || "",
+  platform: existing?.platform || "",
+  topic: existing?.topic || "",
+  pattern: existing?.pattern || "",
+  difficulty: existing?.difficulty || "Easy",
+  status: existing?.status || "attempted",
+  notes: existing?.notes || "",
+  link: existing?.link || ""
   })
 
   if (!existing) {
@@ -36,6 +38,10 @@ function EditProblem({ problems, onUpdate }) {
       <h2>Edit Problem</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
+        <label>Problem Link</label>
+        <input name="link" value={form.link} onChange={handleChange} />
+        </div>
+        <div className="form-group">
           <label>Problem Title</label>
           <input name="title" value={form.title} onChange={handleChange} required />
         </div>
@@ -46,6 +52,31 @@ function EditProblem({ problems, onUpdate }) {
         <div className="form-group">
           <label>Topic</label>
           <input name="topic" value={form.topic} onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Pattern</label>
+          <input
+            name="pattern"
+            list="pattern-options"
+            placeholder="e.g. Sliding Window"
+            value={form.pattern}
+            onChange={handleChange}
+          />
+          <datalist id="pattern-options">
+            <option value="Two Pointers" />
+            <option value="Sliding Window" />
+            <option value="Binary Search" />
+            <option value="DFS/BFS" />
+            <option value="Backtracking" />
+            <option value="Dynamic Programming" />
+            <option value="Greedy" />
+            <option value="Prefix Sum" />
+            <option value="Bit Manipulation" />
+            <option value="Hashing" />
+            <option value="Union Find" />
+            <option value="Topological Sort" />
+            <option value="Divide and Conquer" />
+          </datalist>
         </div>
         <div className="form-group">
           <label>Difficulty</label>

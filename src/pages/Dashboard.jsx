@@ -76,6 +76,26 @@ function Dashboard() {
           })}
         </div>
       </div>
+      {stats.byPattern && Object.keys(stats.byPattern).length > 0 && (
+        <div className="panel" style={{ marginBottom: 32 }}>
+          <h3>Pattern Coverage</h3>
+          {Object.entries(stats.byPattern).map(([pattern, count]) => {
+            const maxPatternCount = Math.max(...Object.values(stats.byPattern), 1)
+            const pct = Math.round((count / maxPatternCount) * 100)
+            return (
+              <div className="progress-row" key={pattern}>
+                <div className="progress-row-label">
+                  <span>{pattern}</span>
+                  <span>{count}</span>
+                </div>
+                <div className="progress-bar-bg">
+                  <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       <div className="panel">
         <h3>Recent Problems</h3>

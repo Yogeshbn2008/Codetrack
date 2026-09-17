@@ -42,3 +42,7 @@ export const getStats = async () => {
   const res = await axios.get(`${API_URL}/stats/summary`, getAuthHeader())
   return res.data
 }
+export const fetchProblemMeta = async (link) => {
+  const res = await axios.post(`${API_URL}/fetch-meta`, { link }, getAuthHeader())
+  return res.data
+}
