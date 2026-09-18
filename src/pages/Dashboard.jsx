@@ -67,6 +67,19 @@ function Dashboard() {
           Longest streak: {stats.streak.longest} day{stats.streak.longest === 1 ? "" : "s"}
         </p>
       </div>
+      {stats.weakTopic && (
+        <div className="panel" style={{ marginBottom: 32, borderColor: "#eab308" }}>
+          <h3>💡 Focus Area</h3>
+          <p style={{ fontSize: 14, color: "#e5e7eb", margin: "0 0 4px 0" }}>
+            <strong>{stats.weakTopic.topic}</strong> looks like your weakest topic right now —
+            you've solved {stats.weakTopic.solved} out of {stats.weakTopic.total} attempted
+            ({Math.round(stats.weakTopic.solveRate * 100)}% solve rate).
+          </p>
+          <p style={{ fontSize: 13, color: "#94a3b8", margin: 0 }}>
+            Consider revisiting a few more {stats.weakTopic.topic} problems this week.
+          </p>
+        </div>
+      )}
 
       <div className="dashboard-panels">
         <div className="panel">
