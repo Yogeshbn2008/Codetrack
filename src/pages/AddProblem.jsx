@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { fetchProblemMeta } from '../services/api'
+import { uploadImage } from '../services/cloudinary'
 import './Forms.css'
 
 function AddProblem({ onAdd }) {
@@ -11,38 +12,56 @@ function AddProblem({ onAdd }) {
     difficulty: "Easy",
     status: "attempted",
     notes: "",
-    link: ""
+    link: "",
+    imageUrl: ""
   })
   const [fetching, setFetching] = useState(false)
   const [fetchError, setFetchError] = useState("")
+  const [imageFile, setImageFile] = useState(null)
+  const [uploading, setUploading] = useState(false)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
   const handleFetchDetails = async () => {
-  if (!form.link) return
-  setFetching(true)
-  setFetchError("")
-  try {
-    const data = await fetchProblemMeta(form.link)
-    setForm({
-      ...form,
-      title: data.title || form.title,
-      platform: data.platform || form.platform,
-      difficulty: data.difficulty || form.difficulty
-    })
+    if (!form.link) return
+    setFetching(true)
+    setFetchError("")
+    try {
+      const data = await fetchProblemMeta(form.link)
+      setForm({
+        ...form,
+        title: data.title || form.title,
+        platform: data.platform || form.platform,
+        difficulty: data.difficulty || form.difficulty
+      })
     } catch (err) {
-    setFetchError("Couldn't auto-fetch details. Please fill them in manually.")
+      setFetchError("Couldn't auto-fetch details. Please fill them in manually.")
     } finally {
-    setFetching(false)
+      setFetching(false)
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onAdd(form)
-    setForm({ title: "", platform: "", topic: "", difficulty: "Easy", status: "attempted", notes: "", link: "" })
+    let finalForm = { ...form }
+
+    if (imageFile) {
+      setUploading(true)
+      try {
+        const url = await uploadImage(imageFile)
+        finalForm.imageUrl = url
+      } catch (err) {
+        alert("Image upload failed, saving problem without the image.")
+      } finally {
+        setUploading(false)
+      }
+    }
+
+    onAdd(finalForm)
+    setForm({ title: "", platform: "", topic: "", pattern: "", difficulty: "Easy", status: "attempted", notes: "", link: "", imageUrl: "" })
+    setImageFile(null)
   }
 
   return (
@@ -128,7 +147,17 @@ function AddProblem({ onAdd }) {
           <label>Notes / Approach</label>
           <textarea name="notes" placeholder="Explain your approach..." value={form.notes} onChange={handleChange} />
         </div>
-        <button className="form-submit-btn" type="submit">+ Add Problem</button>
+        <div className="form-group">
+          <label>Approach Photo (optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files[0])}
+          />
+        </div>
+        <button className="form-submit-btn" type="submit" disabled={uploading}>
+          {uploading ? "Uploading image..." : "+ Add Problem"}
+        </button>
       </form>
     </div>
   )

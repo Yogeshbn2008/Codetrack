@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { uploadImage } from '../services/cloudinary'
 import './Forms.css'
 
 function EditProblem({ problems, onUpdate }) {
@@ -9,15 +10,18 @@ function EditProblem({ problems, onUpdate }) {
   const existing = problems.find((p) => p._id === id)
 
   const [form, setForm] = useState({
-  title: existing?.title || "",
-  platform: existing?.platform || "",
-  topic: existing?.topic || "",
-  pattern: existing?.pattern || "",
-  difficulty: existing?.difficulty || "Easy",
-  status: existing?.status || "attempted",
-  notes: existing?.notes || "",
-  link: existing?.link || ""
+    title: existing?.title || "",
+    platform: existing?.platform || "",
+    topic: existing?.topic || "",
+    pattern: existing?.pattern || "",
+    difficulty: existing?.difficulty || "Easy",
+    status: existing?.status || "attempted",
+    notes: existing?.notes || "",
+    link: existing?.link || "",
+    imageUrl: existing?.imageUrl || ""
   })
+  const [imageFile, setImageFile] = useState(null)
+  const [uploading, setUploading] = useState(false)
 
   if (!existing) {
     return <p style={{ padding: 40 }}>Problem not found.</p>
@@ -27,9 +31,23 @@ function EditProblem({ problems, onUpdate }) {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onUpdate(existing._id, form)
+    let finalForm = { ...form }
+
+    if (imageFile) {
+      setUploading(true)
+      try {
+        const url = await uploadImage(imageFile)
+        finalForm.imageUrl = url
+      } catch (err) {
+        alert("Image upload failed, keeping the previous image if there was one.")
+      } finally {
+        setUploading(false)
+      }
+    }
+
+    onUpdate(existing._id, finalForm)
     navigate('/problems')
   }
 
@@ -38,8 +56,8 @@ function EditProblem({ problems, onUpdate }) {
       <h2>Edit Problem</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-        <label>Problem Link</label>
-        <input name="link" value={form.link} onChange={handleChange} />
+          <label>Problem Link</label>
+          <input name="link" value={form.link} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label>Problem Title</label>
@@ -97,7 +115,26 @@ function EditProblem({ problems, onUpdate }) {
           <label>Notes / Approach</label>
           <textarea name="notes" value={form.notes} onChange={handleChange} />
         </div>
-        <button className="form-submit-btn" type="submit">Save Changes</button>
+
+        {form.imageUrl && !imageFile && (
+          <div className="form-group">
+            <label>Current Photo</label>
+            <img src={form.imageUrl} alt="Current approach" style={{ width: "100%", borderRadius: "8px", maxHeight: "180px", objectFit: "cover" }} />
+          </div>
+        )}
+
+        <div className="form-group">
+          <label>{form.imageUrl ? "Replace Photo (optional)" : "Approach Photo (optional)"}</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files[0])}
+          />
+        </div>
+
+        <button className="form-submit-btn" type="submit" disabled={uploading}>
+          {uploading ? "Uploading image..." : "Save Changes"}
+        </button>
       </form>
     </div>
   )

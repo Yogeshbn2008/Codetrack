@@ -19,7 +19,13 @@ function ProblemCard({ problem, onDelete }) {
       </div>
 
       {problem.notes && <p className="problem-card-notes">"{problem.notes}"</p>}
-
+      {problem.imageUrl && (
+        <img
+          src={problem.imageUrl}
+          alt="Approach"
+          style={{ width: "100%", borderRadius: "8px", marginBottom: "14px", maxHeight: "220px", objectFit: "cover" }}
+        />
+      )}
       <div className="problem-card-actions">
         {problem.link && (
           <a className="btn-edit" href={problem.link} target="_blank" rel="noopener noreferrer">
