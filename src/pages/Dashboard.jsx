@@ -34,9 +34,38 @@ function Dashboard() {
           <p>{stats.attempted}</p>
         </div>
         <div className="stat-card">
-          <h3>Topics Covered</h3>
-          <p>{Object.keys(stats.byTopic).length}</p>
+          <h3>Streak</h3>
+          <p>🔥 {stats.streak.current}</p>
         </div>
+      </div>
+
+      <div className="panel" style={{ marginBottom: 32 }}>
+        <h3>This Week</h3>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+          {stats.streak.last7Days.map((day) => (
+            <div key={day.date} style={{ textAlign: "center", flex: 1 }}>
+              <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 6 }}>{day.label}</div>
+              <div
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  margin: "0 auto",
+                  background: day.active ? "#6366f1" : "#292e39",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13
+                }}
+              >
+                {day.active ? "✓" : ""}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontSize: 12, color: "#94a3b8", margin: "10px 0 0 0" }}>
+          Longest streak: {stats.streak.longest} day{stats.streak.longest === 1 ? "" : "s"}
+        </p>
       </div>
 
       <div className="dashboard-panels">
@@ -76,6 +105,7 @@ function Dashboard() {
           })}
         </div>
       </div>
+
       {stats.byPattern && Object.keys(stats.byPattern).length > 0 && (
         <div className="panel" style={{ marginBottom: 32 }}>
           <h3>Pattern Coverage</h3>
