@@ -1,6 +1,6 @@
 # CodeTrack
 
-A full-stack MERN application for tracking coding practice and DSA (Data Structures & Algorithms) progress. Users can log problems they've solved or attempted, organize them by topic and difficulty, search and filter their history, and track progress on a stats dashboard.
+A full-stack MERN application for tracking coding practice and DSA (Data Structures & Algorithms) progress. Users can log problems they've solved or attempted, tag them by topic and pattern, auto-fetch problem details from LeetCode links, attach approach photos, track a daily solving streak, get revision reminders on a schedule they choose, and see personalized insights on a stats dashboard.
 
 **Live App:** https://codetrack-henna.vercel.app
 **Backend API:** https://codetrack-server.onrender.com
@@ -15,10 +15,17 @@ A full-stack MERN application for tracking coding practice and DSA (Data Structu
 - **Authentication** — secure registration and login with JWT-based sessions and bcrypt password hashing
 - **Per-user data isolation** — every user only sees and manages their own problems
 - **Full CRUD** — add, view, edit, and delete coding problems
-- **Search & filtering** — search by title, filter by topic, difficulty, and status
-- **Progress dashboard** — total solved/attempted counts, breakdown by difficulty and topic, and a recent-activity feed
+- **Auto-fetch problem details** — paste a LeetCode link and the title, platform, and difficulty are pulled in automatically via LeetCode's GraphQL API, with a generic fallback for other platforms; manual entry always stays available if fetching fails
+- **Topic & pattern tagging** — tag problems by topic (Array, DP, Tree...) and by underlying technique/pattern (Sliding Window, Two Pointers, Binary Search...), with autocomplete suggestions while typing
+- **Approach photos** — optionally attach a photo of your handwritten approach or whiteboard solution, uploaded via Cloudinary
+- **Dynamic search & filtering** — debounced title search, plus filter dropdowns for topic, pattern, difficulty, and status that are generated from your own data rather than a fixed list, so they grow as your tagging vocabulary does
+- **Coding streak tracking** — current streak, longest streak, and a 7-day activity row, computed from actual problem-logging dates
+- **Weak-topic insight** — automatically surfaces the topic with your lowest solve rate (among topics with enough attempts to be meaningful) as a focus-area suggestion
+- **Customizable revision reminders** — set your own revision interval (in days) per problem, mark a problem as revised, and see what's due next on both the Problems page and the Dashboard
+- **Progress dashboard** — total solved/attempted counts, breakdowns by difficulty/topic/pattern, streak, focus area, due-for-revision list, and a recent-activity feed
+- **Landing page** — an animated, 3D-tilt hero page shown to logged-out visitors, separate from the authenticated Dashboard
 - **Persistent sessions** — stays logged in across page refreshes via localStorage
-- **Fully deployed** — live frontend (Vercel) connected to a live backend (Render) and a cloud database (MongoDB Atlas)
+- **Fully deployed** — live frontend (Vercel) connected to a live backend (Render), a cloud database (MongoDB Atlas), and cloud image storage (Cloudinary)
 
 ---
 
@@ -41,6 +48,12 @@ A full-stack MERN application for tracking coding practice and DSA (Data Structu
 - JSON Web Tokens (JWT)
 - bcrypt password hashing
 
+**Media Storage**
+- Cloudinary (unsigned client-side image uploads)
+
+**External APIs**
+- LeetCode GraphQL API (problem metadata auto-fetch)
+
 **Deployment**
 - Frontend → Vercel
 - Backend → Render
@@ -59,8 +72,8 @@ A full-stack MERN application for tracking coding practice and DSA (Data Structu
 client/
 ├── src/
 │   ├── components/     # Reusable UI (Navbar, ProblemCard)
-│   ├── pages/          # Route-level pages (Dashboard, Problems, AddProblem, EditProblem, Login, Register)
-│   ├── services/       # Centralized API calls (api.js)
+│   ├── pages/          # Route-level pages (Landing, Dashboard, Problems, AddProblem, EditProblem, Login, Register)
+│   ├── services/       # Centralized API calls (api.js, cloudinary.js)
 │   ├── App.jsx
 │   └── main.jsx
 ├── vercel.json          # SPA routing rewrite rule for deployment
@@ -85,6 +98,7 @@ server/
 ### Prerequisites
 - Node.js installed
 - A MongoDB Atlas connection string (or local MongoDB instance)
+- A free Cloudinary account with an unsigned upload preset (for photo uploads)
 
 ### 1. Clone both repositories
 ```bash
@@ -112,6 +126,9 @@ Server runs on `http://localhost:5000`.
 ```bash
 cd client
 npm install
+```
+In `client/src/services/cloudinary.js`, set your own Cloudinary cloud name and unsigned upload preset name.
+```bash
 npm run dev
 ```
 Frontend runs on `http://localhost:5173`.
@@ -124,12 +141,15 @@ Frontend runs on `http://localhost:5173`.
 |--------|-------|-------------|----------------|
 | POST | `/api/auth/register` | Register a new user | No |
 | POST | `/api/auth/login` | Log in, returns a JWT | No |
-| GET | `/api/problems` | Get all problems for the logged-in user (supports `search`, `topic`, `difficulty`, `status` query params) | Yes |
+| GET | `/api/problems` | Get all problems for the logged-in user (supports `search`, `topic`, `pattern`, `difficulty`, `status`, `revision` query params) | Yes |
 | POST | `/api/problems` | Add a new problem | Yes |
 | GET | `/api/problems/:id` | Get a single problem | Yes |
 | PUT | `/api/problems/:id` | Update a problem | Yes |
+| PATCH | `/api/problems/:id/revise` | Mark a problem as revised (resets its revision clock) | Yes |
 | DELETE | `/api/problems/:id` | Delete a problem | Yes |
-| GET | `/api/problems/stats/summary` | Get dashboard stats (totals, breakdowns, recent activity) | Yes |
+| POST | `/api/problems/fetch-meta` | Fetch title/platform/difficulty from a pasted problem link | Yes |
+| GET | `/api/problems/meta/options` | Get the distinct topics and patterns the user has used, for filter dropdowns | Yes |
+| GET | `/api/problems/stats/summary` | Get dashboard stats (totals, breakdowns, streak, weak-topic insight, due-for-revision list, recent activity) | Yes |
 
 Protected routes require an `Authorization: Bearer <token>` header, obtained from the login response.
 
@@ -144,12 +164,16 @@ This project was built incrementally, feature by feature, rather than from a sin
 - Reconciling `id` vs MongoDB's `_id` after migrating from in-memory data to a real database
 - Implementing JWT-based authentication and scoping API queries per authenticated user
 - Configuring CORS, environment variables, and client-side routing rewrites for a production deployment split across two separate hosting platforms
+- Working around a platform's anti-scraping protection by using its own public GraphQL API instead of parsing HTML
+- Computing streaks and per-problem revision schedules from raw timestamps, including handling variable, user-defined intervals rather than a single fixed rule
+- Debouncing a search input to cut down on redundant network requests
+- Building dynamic, data-driven filter options instead of a hardcoded list that would go stale as new tags get used
 
 ---
 
 ## Future Improvements
 
-- Debounced search input to reduce redundant API calls
-- Coding streak tracker and daily goals
 - Public user profiles and a leaderboard
-- Direct links to problems on their original platform (LeetCode, Codeforces, etc.)
+- Semantic search over problem notes using embeddings and a RAG pipeline
+- Daily goal tracking alongside the existing streak
+- Direct in-app problem-solving stats synced from LeetCode's public API, beyond just metadata fetching
