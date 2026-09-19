@@ -46,3 +46,7 @@ export const fetchProblemMeta = async (link) => {
   const res = await axios.post(`${API_URL}/fetch-meta`, { link }, getAuthHeader())
   return res.data
 }
+export const markRevised = async (id) => {
+  const res = await axios.patch(`${API_URL}/${id}/revise`, {}, getAuthHeader())
+  return res.data
+}

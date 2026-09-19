@@ -11,6 +11,7 @@ function AddProblem({ onAdd }) {
     pattern: "",
     difficulty: "Easy",
     status: "attempted",
+    revisionIntervalDays: 7,
     notes: "",
     link: "",
     imageUrl: ""
@@ -142,6 +143,16 @@ function AddProblem({ onAdd }) {
             <option value="attempted">Attempted</option>
             <option value="solved">Solved</option>
           </select>
+        </div>
+        <div className="form-group">
+          <label>Revise Every (days)</label>
+          <input
+            type="number"
+            name="revisionIntervalDays"
+            min="1"
+            value={form.revisionIntervalDays}
+            onChange={handleChange}
+          />
         </div>
         <div className="form-group">
           <label>Notes / Approach</label>

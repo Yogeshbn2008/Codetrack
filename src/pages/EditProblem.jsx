@@ -16,6 +16,7 @@ function EditProblem({ problems, onUpdate }) {
     pattern: existing?.pattern || "",
     difficulty: existing?.difficulty || "Easy",
     status: existing?.status || "attempted",
+    revisionIntervalDays: existing?.revisionIntervalDays || 7,
     notes: existing?.notes || "",
     link: existing?.link || "",
     imageUrl: existing?.imageUrl || ""
@@ -110,6 +111,16 @@ function EditProblem({ problems, onUpdate }) {
             <option value="attempted">Attempted</option>
             <option value="solved">Solved</option>
           </select>
+        </div>
+        <div className="form-group">
+          <label>Revise Every (days)</label>
+          <input
+            type="number"
+            name="revisionIntervalDays"
+            min="1"
+            value={form.revisionIntervalDays}
+            onChange={handleChange}
+          />
         </div>
         <div className="form-group">
           <label>Notes / Approach</label>

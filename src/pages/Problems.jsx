@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react'
 import ProblemCard from '../components/ProblemCard'
-import { getProblems } from '../services/api'
+import { getProblems, markRevised } from '../services/api'
 import './Problems.css'
 
 function Problems({ onDelete }) {
   const [problems, setProblems] = useState([])
   const [filters, setFilters] = useState({ search: "", topic: "", pattern: "", difficulty: "", status: "" })
+  const [revisionOnly, setRevisionOnly] = useState(false)
 
   const fetchProblems = () => {
-    getProblems(filters).then(setProblems)
+    const activeFilters = { ...filters }
+    if (revisionOnly) activeFilters.revision = "true"
+    getProblems(activeFilters).then(setProblems)
   }
 
   useEffect(() => {
     fetchProblems()
-  }, [filters])
+  }, [filters, revisionOnly])
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value })
@@ -21,6 +24,11 @@ function Problems({ onDelete }) {
 
   const handleDelete = async (id) => {
     await onDelete(id)
+    fetchProblems()
+  }
+
+  const handleRevise = async (id) => {
+    await markRevised(id)
     fetchProblems()
   }
 
@@ -67,11 +75,16 @@ function Problems({ onDelete }) {
         </select>
       </div>
 
+      <label style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, fontSize: 13, color: "#cbd5e1" }}>
+        <input type="checkbox" checked={revisionOnly} onChange={(e) => setRevisionOnly(e.target.checked)} />
+        Show only problems due for revision (7+ days)
+      </label>
+
       {problems.length === 0 ? (
         <p className="empty-state">No problems match your filters.</p>
       ) : (
         problems.map((problem) => (
-          <ProblemCard key={problem._id} problem={problem} onDelete={handleDelete} />
+          <ProblemCard key={problem._id} problem={problem} onDelete={handleDelete} onRevise={handleRevise} />
         ))
       )}
     </div>

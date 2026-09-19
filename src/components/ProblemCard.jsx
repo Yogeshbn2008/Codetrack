@@ -1,7 +1,14 @@
 import { Link } from 'react-router-dom'
 import './ProblemCard.css'
 
-function ProblemCard({ problem, onDelete }) {
+function daysSince(dateStr) {
+  const days = Math.floor((new Date() - new Date(dateStr)) / (1000 * 60 * 60 * 24))
+  if (days === 0) return "today"
+  if (days === 1) return "1 day ago"
+  return `${days} days ago`
+}
+
+function ProblemCard({ problem, onDelete, onRevise }) {
   return (
     <div className="problem-card">
       <div className="problem-card-top">
@@ -19,6 +26,7 @@ function ProblemCard({ problem, onDelete }) {
       </div>
 
       {problem.notes && <p className="problem-card-notes">"{problem.notes}"</p>}
+
       {problem.imageUrl && (
         <img
           src={problem.imageUrl}
@@ -26,6 +34,13 @@ function ProblemCard({ problem, onDelete }) {
           style={{ width: "100%", borderRadius: "8px", marginBottom: "14px", maxHeight: "220px", objectFit: "cover" }}
         />
       )}
+
+      {problem.lastRevisedAt && (
+        <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 12px 0" }}>
+          Last revised: {daysSince(problem.lastRevisedAt)} · Revise every {problem.revisionIntervalDays || 7} day{(problem.revisionIntervalDays || 7) === 1 ? "" : "s"}
+        </p>
+      )}
+
       <div className="problem-card-actions">
         {problem.link && (
           <a className="btn-edit" href={problem.link} target="_blank" rel="noopener noreferrer">
@@ -33,6 +48,9 @@ function ProblemCard({ problem, onDelete }) {
           </a>
         )}
         <Link className="btn-edit" to={`/edit/${problem._id}`}>Edit</Link>
+        {onRevise && (
+          <button className="btn-edit" onClick={() => onRevise(problem._id)}>Mark Revised</button>
+        )}
         <button className="btn-delete" onClick={() => onDelete(problem._id)}>Delete</button>
       </div>
     </div>

@@ -81,6 +81,22 @@ function Dashboard() {
         </div>
       )}
 
+      {stats.dueForRevision && stats.dueForRevision.length > 0 && (
+        <div className="panel" style={{ marginBottom: 32 }}>
+          <h3>📌 Due for Revision</h3>
+          <ul className="recent-list">
+            {stats.dueForRevision.map((p) => (
+              <li key={p._id}>
+                <span>{p.title}</span>
+                <span style={{ color: "#94a3b8", fontSize: 12 }}>
+                  {Math.floor((new Date() - new Date(p.lastRevisedAt)) / (1000 * 60 * 60 * 24))} days since last revision
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="dashboard-panels">
         <div className="panel">
           <h3>By Difficulty</h3>
