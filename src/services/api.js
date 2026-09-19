@@ -50,3 +50,7 @@ export const markRevised = async (id) => {
   const res = await axios.patch(`${API_URL}/${id}/revise`, {}, getAuthHeader())
   return res.data
 }
+export const getFilterOptions = async () => {
+  const res = await axios.get(`${API_URL}/meta/options`, getAuthHeader())
+  return res.data
+}
