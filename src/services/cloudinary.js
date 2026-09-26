@@ -1,10 +1,6 @@
-export const uploadToCloudinary = async (file) => {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-  if (!cloudName || !uploadPreset) {
-    throw new Error("Cloudinary configuration missing in environment variables");
-  }
+export const uploadImage = async (file) => {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "a5jzwc2x";
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "Yog13b2n8";
 
   const formData = new FormData();
   formData.append('file', file);
@@ -22,3 +18,6 @@ export const uploadToCloudinary = async (file) => {
   const data = await res.json();
   return data.secure_url;
 };
+
+// Alias export so both function names work
+export const uploadToCloudinary = uploadImage;
