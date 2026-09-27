@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getStats, markRevised, addGoal } from '../services/api'
 import AICoachModal from '../components/AICoachModal'
+import PortfolioModal from '../components/PortfolioModal'
 import './Dashboard.css'
 
 function Dashboard() {
@@ -10,6 +11,7 @@ function Dashboard() {
   const [activeRecallId, setActiveRecallId] = useState(null)
   const [showAiModal, setShowAiModal] = useState(false)
   const [aiModalProblem, setAiModalProblem] = useState(null)
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false)
 
   useEffect(() => {
     getStats().then(setStats)
@@ -77,6 +79,26 @@ function Dashboard() {
           >
             🧠 AI Coach
           </button>
+          <button
+            onClick={() => setShowPortfolioModal(true)}
+            style={{
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.25))',
+              color: '#6ee7b7',
+              border: '1px solid rgba(16, 185, 129, 0.5)',
+              padding: '8px 16px',
+              borderRadius: 8,
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              transition: 'all 0.2s'
+            }}
+            title="1-Click PDF Portfolio Export for Job Applications"
+          >
+            📄 Download Portfolio
+          </button>
           <Link 
             to="/goals" 
             style={{ 
@@ -98,6 +120,121 @@ function Dashboard() {
           </Link>
         </div>
       </div>
+
+      {/* Quantified DSA Readiness Score Card */}
+      {stats.readiness && (
+        <div style={{
+          background: 'linear-gradient(135deg, #182234, #121927)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: 14,
+          padding: '20px 24px',
+          marginBottom: 24,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 20
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            {/* Circular Gauge */}
+            <div style={{
+              width: 86,
+              height: 86,
+              borderRadius: '50%',
+              border: `4px solid ${stats.readiness.tierColor}`,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(0, 0, 0, 0.3)',
+              boxShadow: `0 0 20px ${stats.readiness.tierColor}30`,
+              flexShrink: 0
+            }}>
+              <span style={{ fontSize: 26, fontWeight: 900, color: stats.readiness.tierColor, lineHeight: 1 }}>
+                {stats.readiness.score}
+              </span>
+              <span style={{ fontSize: 10.5, color: '#94a3b8', fontWeight: 600 }}>/ 100</span>
+            </div>
+
+            <div>
+              <div style={{
+                display: 'inline-block',
+                padding: '2px 10px',
+                borderRadius: 20,
+                fontSize: 11,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                background: `${stats.readiness.tierColor}20`,
+                color: stats.readiness.tierColor,
+                border: `1px solid ${stats.readiness.tierColor}`,
+                marginBottom: 6
+              }}>
+                {stats.readiness.tierLevel} · {stats.readiness.tier}
+              </div>
+              <h3 style={{ fontSize: 17, fontWeight: 700, margin: '0 0 4px 0', color: '#ffffff' }}>
+                DSA Interview Readiness Index
+              </h3>
+              <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0 }}>
+                💡 <strong>Next Step:</strong> {stats.readiness.recommendation}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: 8,
+              padding: '8px 14px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Volume</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#38bdf8' }}>{stats.readiness.breakdown.volumeScore}/35</div>
+            </div>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: 8,
+              padding: '8px 14px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Topics</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#4ade80' }}>{stats.readiness.breakdown.topicScore}/35</div>
+            </div>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: 8,
+              padding: '8px 14px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Retention</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#c084fc' }}>{stats.readiness.breakdown.retentionScore}/30</div>
+            </div>
+
+            <button
+              onClick={() => setShowPortfolioModal(true)}
+              style={{
+                background: 'linear-gradient(135deg, #10b981, #059669)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '9px 16px',
+                borderRadius: 8,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                boxShadow: '0 2px 8px rgba(16, 185, 129, 0.35)'
+              }}
+            >
+              📄 Export Report
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="stats-grid">
         <div className="stat-card">
@@ -386,6 +523,14 @@ function Dashboard() {
             setAiModalProblem(null)
           }}
           initialProblem={aiModalProblem}
+        />
+      )}
+
+      {/* DSA Portfolio & Readiness Modal */}
+      {showPortfolioModal && (
+        <PortfolioModal
+          isOpen={showPortfolioModal}
+          onClose={() => setShowPortfolioModal(false)}
         />
       )}
     </div>

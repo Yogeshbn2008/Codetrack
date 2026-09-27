@@ -126,4 +126,10 @@ export const getSocraticHints = async ({ title, topic, difficulty, notes, userQu
   return res.data;
 };
 
+// --- DSA Portfolio & Readiness API ---
+export const getPortfolioData = async () => {
+  const res = await api.get('/api/problems/portfolio');
+  return res.data;
+};
+
 export default api;

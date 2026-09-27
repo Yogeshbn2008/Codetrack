@@ -10,6 +10,19 @@ A full-stack MERN application for tracking coding practice and DSA (Data Structu
 
 ---
 
+## 🧩 1-Click Chrome Extension Download
+
+> 📦 **[Download CodeTrack-Companion-v1.0.0.zip (Direct Download)](https://codetrack-henna.vercel.app/codetrack-extension.zip)**
+
+**Instant 30-Second Setup for Any User:**
+1. Download and unzip [`codetrack-extension.zip`](https://codetrack-henna.vercel.app/codetrack-extension.zip).
+2. Open Chrome and navigate to `chrome://extensions`.
+3. Toggle on **Developer mode** in the top right.
+4. Click **Load unpacked** in the top left and select the unzipped `codetrack-extension` folder.
+5. Open any LeetCode problem, click the **⚡ CodeTrack** extension icon, click **"1-Click Connect from CodeTrack Tab"**, and log problems directly into your account!
+
+---
+
 ## Features
 
 - **Authentication** — secure registration and login with JWT-based sessions and bcrypt password hashing
