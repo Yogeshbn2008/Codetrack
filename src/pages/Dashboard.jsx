@@ -1,14 +1,44 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { getStats } from '../services/api'
+import { getStats, markRevised, addGoal } from '../services/api'
 import './Dashboard.css'
 
 function Dashboard() {
   const [stats, setStats] = useState(null)
+  const [addedGoals, setAddedGoals] = useState(new Set())
+  const [activeRecallId, setActiveRecallId] = useState(null)
 
   useEffect(() => {
     getStats().then(setStats)
   }, [])
+
+  const handleAddGoalFromDue = async (problem) => {
+    try {
+      const todayStr = new Date().toISOString().slice(0, 10)
+      await addGoal({
+        title: `Revise: ${problem.title}`,
+        date: todayStr,
+        type: 'revision',
+        problemId: problem._id,
+        problemUrl: problem.link || '',
+        priority: 'high'
+      })
+      setAddedGoals(prev => new Set([...prev, problem._id]))
+    } catch (err) {
+      console.error("Error adding problem to goals:", err)
+    }
+  }
+
+  const handleReviseFromDue = async (problemId, quality) => {
+    try {
+      await markRevised(problemId, quality)
+      setActiveRecallId(null)
+      const updated = await getStats()
+      setStats(updated)
+    } catch (err) {
+      console.error("Error marking problem revised:", err)
+    }
+  }
 
   if (!stats) return <p style={{ padding: 40 }}>Loading dashboard...</p>
 
@@ -105,16 +135,122 @@ function Dashboard() {
 
       {stats.dueForRevision && stats.dueForRevision.length > 0 && (
         <div className="panel" style={{ marginBottom: 32 }}>
-          <h3>📌 Due for Revision</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+            <h3 style={{ margin: 0 }}>📌 Due for Revision (Spaced Repetition)</h3>
+            <span style={{ fontSize: 12, color: '#f59e0b', background: '#3b2505', padding: '3px 10px', borderRadius: 12, fontWeight: 600 }}>
+              {stats.dueForRevision.length} problem{stats.dueForRevision.length === 1 ? '' : 's'} ready
+            </span>
+          </div>
+
           <ul className="recent-list">
-            {stats.dueForRevision.map((p) => (
-              <li key={p._id}>
-                <span>{p.title}</span>
-                <span style={{ color: "#94a3b8", fontSize: 12 }}>
-                  {Math.floor((new Date() - new Date(p.lastRevisedAt)) / (1000 * 60 * 60 * 24))} days since last revision
-                </span>
-              </li>
-            ))}
+            {stats.dueForRevision.map((p) => {
+              const isAdded = addedGoals.has(p._id)
+              const isRecallOpen = activeRecallId === p._id
+              const daysAgo = Math.floor((new Date() - new Date(p.lastRevisedAt)) / (1000 * 60 * 60 * 24))
+              const interval = p.revisionIntervalDays || 7
+              const ef = p.easeFactor || 2.5
+              const hardDays = Math.max(2, Math.round(interval * 1.2))
+              const goodDays = Math.max(3, Math.round(interval * ef))
+              const easyDays = Math.max(5, Math.round(interval * ef * 1.3))
+
+              return (
+                <li key={p._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #292e39', flexWrap: 'wrap', gap: 10 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontWeight: 600, color: '#f8fafc', fontSize: 14 }}>{p.title}</span>
+                      {p.difficulty && (
+                        <span className="tag" style={{ fontSize: 10, padding: '1px 6px' }}>{p.difficulty}</span>
+                      )}
+                    </div>
+                    <span style={{ color: '#94a3b8', fontSize: 12 }}>
+                      Last revised {daysAgo} days ago · Interval was {interval}d {p.revisionCount ? `· Rev #${p.revisionCount}` : ''}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    {/* 1-Click Add to Today's Goals */}
+                    <button
+                      onClick={() => handleAddGoalFromDue(p)}
+                      disabled={isAdded}
+                      style={{
+                        background: isAdded ? '#15803d' : '#2563eb',
+                        color: '#ffffff',
+                        border: 'none',
+                        padding: '6px 12px',
+                        borderRadius: 6,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        cursor: isAdded ? 'default' : 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        transition: 'background 0.2s'
+                      }}
+                      title="Add this problem directly to Today's Goals"
+                    >
+                      {isAdded ? '✓ Added to Goals' : '+ Add to Goals'}
+                    </button>
+
+                    {/* Adaptive SM-2 Mark Revised Button */}
+                    {!isRecallOpen ? (
+                      <button
+                        onClick={() => setActiveRecallId(p._id)}
+                        style={{
+                          background: '#21262f',
+                          color: '#cbd5e1',
+                          border: '1px solid #374151',
+                          padding: '6px 12px',
+                          borderRadius: 6,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Mark Revised ▾
+                      </button>
+                    ) : (
+                      <div style={{ display: 'flex', gap: 4, alignItems: 'center', background: '#11141c', padding: '3px 6px', borderRadius: 6, border: '1px solid #374151' }}>
+                        <span style={{ fontSize: 11, color: '#94a3b8' }}>Recall:</span>
+                        <button
+                          onClick={() => handleReviseFromDue(p._id, 'again')}
+                          style={{ background: '#7f1d1d', color: '#fca5a5', border: 'none', padding: '4px 6px', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}
+                          title="Forgot approach. Reset to 1 day."
+                        >
+                          Again (1d)
+                        </button>
+                        <button
+                          onClick={() => handleReviseFromDue(p._id, 'hard')}
+                          style={{ background: '#78350f', color: '#fde68a', border: 'none', padding: '4px 6px', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}
+                          title="Struggled to recall."
+                        >
+                          Hard ({hardDays}d)
+                        </button>
+                        <button
+                          onClick={() => handleReviseFromDue(p._id, 'good')}
+                          style={{ background: '#14532d', color: '#86efac', border: 'none', padding: '4px 6px', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}
+                          title="Normal recall."
+                        >
+                          Good ({goodDays}d)
+                        </button>
+                        <button
+                          onClick={() => handleReviseFromDue(p._id, 'easy')}
+                          style={{ background: '#1e3a8a', color: '#93c5fd', border: 'none', padding: '4px 6px', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}
+                          title="Instant, effortless recall."
+                        >
+                          Easy ({easyDays}d)
+                        </button>
+                        <button
+                          onClick={() => setActiveRecallId(null)}
+                          style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: 12, padding: '0 4px' }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         </div>
       )}

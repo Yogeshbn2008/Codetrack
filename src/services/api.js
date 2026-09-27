@@ -71,8 +71,8 @@ export const fetchProblemMeta = async (link) => {
   return res.data;
 };
 
-export const markRevised = async (id) => {
-  const res = await api.patch(`/api/problems/${id}/revise`, {});
+export const markRevised = async (id, quality) => {
+  const res = await api.patch(`/api/problems/${id}/revise`, quality ? { quality } : {});
   return res.data;
 };
 

@@ -44,8 +44,8 @@ function Problems({ onDelete }) {
     fetchProblems()
   }
 
-  const handleRevise = async (id) => {
-    await markRevised(id)
+  const handleRevise = async (id, quality) => {
+    await markRevised(id, quality)
     fetchProblems()
   }
 

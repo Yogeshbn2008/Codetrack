@@ -96,3 +96,33 @@
 .btn-delete:hover {
   background: rgba(239, 68, 68, 0.2);
 }
+
+.recall-menu {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  background: #10131a;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #3b4252;
+  flex-wrap: wrap;
+}
+
+.btn-recall {
+  border: none;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-recall:hover {
+  opacity: 0.85;
+}
+
+.btn-recall.again { background: #7f1d1d; color: #fca5a5; }
+.btn-recall.hard { background: #78350f; color: #fde68a; }
+.btn-recall.good { background: #14532d; color: #86efac; }
+.btn-recall.easy { background: #1e3a8a; color: #93c5fd; }
