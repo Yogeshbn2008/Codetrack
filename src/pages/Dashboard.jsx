@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getStats, markRevised, addGoal } from '../services/api'
+import AICoachModal from '../components/AICoachModal'
 import './Dashboard.css'
 
 function Dashboard() {
   const [stats, setStats] = useState(null)
   const [addedGoals, setAddedGoals] = useState(new Set())
   const [activeRecallId, setActiveRecallId] = useState(null)
+  const [showAiModal, setShowAiModal] = useState(false)
+  const [aiModalProblem, setAiModalProblem] = useState(null)
 
   useEffect(() => {
     getStats().then(setStats)
@@ -51,25 +54,49 @@ function Dashboard() {
           <h2>Welcome back 👋</h2>
           <p>Keep solving. Keep improving.</p>
         </div>
-        <Link 
-          to="/goals" 
-          style={{ 
-            textDecoration: 'none', 
-            background: '#1e2330', 
-            color: '#f8fafc', 
-            border: '1px solid #333948', 
-            padding: '8px 16px', 
-            borderRadius: 8, 
-            fontSize: 13, 
-            fontWeight: 600, 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: 6,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-          }}
-        >
-          🎯 Daily Goals Planner →
-        </Link>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => {
+              setAiModalProblem(null)
+              setShowAiModal(true)
+            }}
+            style={{
+              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.25))',
+              color: '#c7d2fe',
+              border: '1px solid rgba(99, 102, 241, 0.5)',
+              padding: '8px 16px',
+              borderRadius: 8,
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              transition: 'all 0.2s'
+            }}
+          >
+            🧠 AI Coach
+          </button>
+          <Link 
+            to="/goals" 
+            style={{ 
+              textDecoration: 'none', 
+              background: '#1e2330', 
+              color: '#f8fafc', 
+              border: '1px solid #333948', 
+              padding: '8px 16px', 
+              borderRadius: 8, 
+              fontSize: 13, 
+              fontWeight: 600, 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: 6,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+            }}
+          >
+            🎯 Daily Goals Planner →
+          </Link>
+        </div>
       </div>
 
       <div className="stats-grid">
@@ -189,6 +216,30 @@ function Dashboard() {
                       title="Add this problem directly to Today's Goals"
                     >
                       {isAdded ? '✓ Added to Goals' : '+ Add to Goals'}
+                    </button>
+
+                    {/* AI Socratic Clue Button */}
+                    <button
+                      onClick={() => {
+                        setAiModalProblem(p)
+                        setShowAiModal(true)
+                      }}
+                      style={{
+                        background: 'rgba(99, 102, 241, 0.15)',
+                        color: '#a5b4fc',
+                        border: '1px solid rgba(99, 102, 241, 0.35)',
+                        padding: '6px 12px',
+                        borderRadius: 6,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4
+                      }}
+                      title="Get progressive Socratic hints for this problem"
+                    >
+                      🧠 AI Clue
                     </button>
 
                     {/* Adaptive SM-2 Mark Revised Button */}
@@ -325,6 +376,16 @@ function Dashboard() {
           ))}
         </ul>
       </div>
+
+      {/* AI Coach Socratic & Complexity Modal */}
+      <AICoachModal
+        isOpen={showAiModal}
+        onClose={() => {
+          setShowAiModal(false)
+          setAiModalProblem(null)
+        }}
+        initialProblem={aiModalProblem}
+      />
     </div>
   )
 }

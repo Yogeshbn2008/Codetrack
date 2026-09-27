@@ -115,4 +115,15 @@ export const rolloverGoals = async (today) => {
   return res.data;
 };
 
+// --- AI Coach & Complexity Analyzer API ---
+export const analyzeComplexity = async ({ code, language, problemContext }) => {
+  const res = await api.post('/api/ai/analyze-complexity', { code, language, problemContext });
+  return res.data;
+};
+
+export const getSocraticHints = async ({ title, topic, difficulty, notes, userQuery }) => {
+  const res = await api.post('/api/ai/socratic-hint', { title, topic, difficulty, notes, userQuery });
+  return res.data;
+};
+
 export default api;

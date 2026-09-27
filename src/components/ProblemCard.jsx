@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { addGoal } from '../services/api'
+import AICoachModal from './AICoachModal'
 import './ProblemCard.css'
 
 function daysSince(dateStr) {
@@ -14,6 +15,7 @@ function ProblemCard({ problem, onDelete, onRevise }) {
   const [showRecall, setShowRecall] = useState(false)
   const [goalAdded, setGoalAdded] = useState(false)
   const [revisedMsg, setRevisedMsg] = useState('')
+  const [showAiModal, setShowAiModal] = useState(false)
 
   const handleAddGoal = async () => {
     try {
@@ -134,8 +136,25 @@ function ProblemCard({ problem, onDelete, onRevise }) {
           </div>
         )}
 
+        {/* AI Coach Trigger */}
+        <button
+          className="btn-edit"
+          onClick={() => setShowAiModal(true)}
+          title="Get Socratic Hints and Big-O Complexity Analysis"
+          style={{ borderColor: 'rgba(99, 102, 241, 0.4)', color: '#818cf8' }}
+        >
+          🧠 AI Coach
+        </button>
+
         <button className="btn-delete" onClick={() => onDelete(problem._id)}>Delete</button>
       </div>
+
+      {/* AI Coach Socratic & Complexity Modal */}
+      <AICoachModal
+        isOpen={showAiModal}
+        onClose={() => setShowAiModal(false)}
+        initialProblem={problem}
+      />
     </div>
   )
 }
