@@ -43,10 +43,12 @@ function Navbar({ user, onLogout }) {
       </nav>
 
       {/* Global AI Coach Modal */}
-      <AICoachModal
-        isOpen={showAiModal}
-        onClose={() => setShowAiModal(false)}
-      />
+      {showAiModal && (
+        <AICoachModal
+          isOpen={showAiModal}
+          onClose={() => setShowAiModal(false)}
+        />
+      )}
     </>
   )
 }

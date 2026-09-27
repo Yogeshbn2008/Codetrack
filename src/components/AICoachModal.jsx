@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { analyzeComplexity, getSocraticHints } from '../services/api'
 import './AICoachModal.css'
 
@@ -7,10 +7,10 @@ function AICoachModal({ isOpen, onClose, initialProblem = null }) {
 
   // Socratic Hints State
   const [problemData, setProblemData] = useState({
-    title: initialProblem?.title || '',
-    topic: initialProblem?.topic || 'Algorithms',
-    difficulty: initialProblem?.difficulty || 'Medium',
-    notes: initialProblem?.notes || ''
+    title: '',
+    topic: 'Algorithms',
+    difficulty: 'Medium',
+    notes: ''
   })
   const [userQuery, setUserQuery] = useState('')
   const [hintsLoading, setHintsLoading] = useState(false)
@@ -25,24 +25,58 @@ function AICoachModal({ isOpen, onClose, initialProblem = null }) {
   const [complexityResult, setComplexityResult] = useState(null)
   const [complexityError, setComplexityError] = useState('')
 
+  // Define fetchHints BEFORE any useEffect or early returns
+  const fetchHints = useCallback(async (overrideData = null) => {
+    const dataToUse = overrideData || problemData
+    if (!dataToUse || !dataToUse.title || !dataToUse.title.trim()) {
+      setHintsError('Please provide a problem title.')
+      return
+    }
+
+    setHintsLoading(true)
+    setHintsError('')
+    try {
+      const res = await getSocraticHints({
+        title: dataToUse.title.trim(),
+        topic: dataToUse.topic || 'Algorithms',
+        difficulty: dataToUse.difficulty || 'Medium',
+        notes: dataToUse.notes || '',
+        userQuery: (userQuery || '').trim()
+      })
+      setHintsData(res)
+      setRevealedTiers({ 1: true, 2: false, 3: false, 4: false })
+    } catch (err) {
+      console.error('Error fetching hints:', err)
+      setHintsError(err.response?.data?.message || 'Failed to fetch Socratic hints.')
+    } finally {
+      setHintsLoading(false)
+    }
+  }, [problemData, userQuery])
+
   // Sync initial problem when modal opens
   useEffect(() => {
-    if (initialProblem) {
-      setProblemData({
+    if (isOpen && initialProblem) {
+      const nextData = {
         title: initialProblem.title || '',
         topic: initialProblem.topic || 'Algorithms',
         difficulty: initialProblem.difficulty || 'Medium',
         notes: initialProblem.notes || ''
+      }
+      setProblemData(nextData)
+      setHintsData(null)
+      setRevealedTiers({ 1: true, 2: false, 3: false, 4: false })
+      // Automatically fetch hints when modal is opened for a specific problem
+      fetchHints(nextData)
+    } else if (isOpen && !initialProblem) {
+      setProblemData({
+        title: '',
+        topic: 'Algorithms',
+        difficulty: 'Medium',
+        notes: ''
       })
-      // Auto fetch hints when opened for a specific problem
-      fetchHints({
-        title: initialProblem.title,
-        topic: initialProblem.topic,
-        difficulty: initialProblem.difficulty,
-        notes: initialProblem.notes
-      })
+      setHintsData(null)
     }
-  }, [initialProblem])
+  }, [isOpen, initialProblem])
 
   // Handle ESC key to close
   useEffect(() => {
@@ -53,41 +87,12 @@ function AICoachModal({ isOpen, onClose, initialProblem = null }) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
-  if (!isOpen) return null
-
-  const fetchHints = async (overrideData = null) => {
-    const dataToUse = overrideData || problemData
-    if (!dataToUse.title) {
-      setHintsError('Please provide a problem title.')
-      return
-    }
-
-    setHintsLoading(true)
-    setHintsError('')
-    try {
-      const res = await getSocraticHints({
-        title: dataToUse.title,
-        topic: dataToUse.topic,
-        difficulty: dataToUse.difficulty,
-        notes: dataToUse.notes,
-        userQuery: userQuery.trim()
-      })
-      setHintsData(res)
-      // Level 1 revealed by default, rest locked until user wants them
-      setRevealedTiers({ 1: true, 2: false, 3: false, 4: false })
-    } catch (err) {
-      setHintsError(err.response?.data?.message || 'Failed to fetch Socratic hints.')
-    } finally {
-      setHintsLoading(false)
-    }
-  }
-
   const toggleTier = (tier) => {
     setRevealedTiers(prev => ({ ...prev, [tier]: !prev[tier] }))
   }
 
   const handleAnalyzeComplexity = async () => {
-    if (!code.trim()) {
+    if (!code || !code.trim()) {
       setComplexityError('Please paste or write some code first.')
       return
     }
@@ -99,18 +104,22 @@ function AICoachModal({ isOpen, onClose, initialProblem = null }) {
         code: code.trim(),
         language,
         problemContext: {
-          title: problemData.title,
-          topic: problemData.topic,
-          difficulty: problemData.difficulty
+          title: problemData.title || '',
+          topic: problemData.topic || 'Algorithms',
+          difficulty: problemData.difficulty || 'Medium'
         }
       })
       setComplexityResult(res)
     } catch (err) {
+      console.error('Error analyzing complexity:', err)
       setComplexityError(err.response?.data?.message || 'Failed to analyze code complexity.')
     } finally {
       setComplexityLoading(false)
     }
   }
+
+  // Early return ONLY after all hooks and functions are declared
+  if (!isOpen) return null
 
   return (
     <div className="ai-modal-overlay" onClick={onClose}>
@@ -123,7 +132,7 @@ function AICoachModal({ isOpen, onClose, initialProblem = null }) {
               <span className="ai-problem-tag">
                 {problemData.title}
                 {problemData.difficulty && (
-                  <span className={`ai-diff-tag diff-${problemData.difficulty.toLowerCase()}`}>
+                  <span className={`ai-diff-tag diff-${String(problemData.difficulty).toLowerCase()}`}>
                     {problemData.difficulty}
                   </span>
                 )}
@@ -191,7 +200,7 @@ function AICoachModal({ isOpen, onClose, initialProblem = null }) {
             {hintsLoading && (
               <div className="ai-loading-skeleton">
                 <div className="ai-spinner"></div>
-                <p>Generating progressive Socratic clues for <strong>{problemData.title}</strong>...</p>
+                <p>Generating progressive Socratic clues for <strong>{problemData.title || 'Problem'}</strong>...</p>
                 <span className="ai-subtext">Teaching principles without spoiling the entire solution.</span>
               </div>
             )}

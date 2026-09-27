@@ -150,11 +150,13 @@ function ProblemCard({ problem, onDelete, onRevise }) {
       </div>
 
       {/* AI Coach Socratic & Complexity Modal */}
-      <AICoachModal
-        isOpen={showAiModal}
-        onClose={() => setShowAiModal(false)}
-        initialProblem={problem}
-      />
+      {showAiModal && (
+        <AICoachModal
+          isOpen={showAiModal}
+          onClose={() => setShowAiModal(false)}
+          initialProblem={problem}
+        />
+      )}
     </div>
   )
 }

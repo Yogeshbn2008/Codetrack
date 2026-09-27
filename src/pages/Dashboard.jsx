@@ -378,14 +378,16 @@ function Dashboard() {
       </div>
 
       {/* AI Coach Socratic & Complexity Modal */}
-      <AICoachModal
-        isOpen={showAiModal}
-        onClose={() => {
-          setShowAiModal(false)
-          setAiModalProblem(null)
-        }}
-        initialProblem={aiModalProblem}
-      />
+      {showAiModal && (
+        <AICoachModal
+          isOpen={showAiModal}
+          onClose={() => {
+            setShowAiModal(false)
+            setAiModalProblem(null)
+          }}
+          initialProblem={aiModalProblem}
+        />
+      )}
     </div>
   )
 }
