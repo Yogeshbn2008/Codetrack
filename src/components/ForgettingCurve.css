@@ -1,0 +1,382 @@
+.forgetting-panel {
+  background: #181c25;
+  border: 1px solid #292e39;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.forgetting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.forgetting-title-wrap h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forgetting-title-wrap p {
+  margin: 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* Header Retention KPI stats */
+.forgetting-kpis {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.forgetting-kpi-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.forgetting-kpi-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.forgetting-kpi-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.forgetting-kpi-label {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.forgetting-kpi-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+/* Filter Pills Bar */
+.forgetting-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.forgetting-filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.forgetting-filter-btn {
+  background: #1e2430;
+  border: 1px solid #333d4e;
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.forgetting-filter-btn:hover {
+  background: #252e3d;
+  color: #ffffff;
+  border-color: #4b5563;
+}
+
+.forgetting-filter-btn.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #6366f1;
+  color: #818cf8;
+}
+
+.forgetting-filter-btn.active.critical {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #f87171;
+}
+
+.forgetting-filter-btn.active.fading {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+.forgetting-filter-btn.active.high {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #34d399;
+}
+
+/* SVG Chart Area */
+.forgetting-chart-container {
+  width: 100%;
+  position: relative;
+  background: #11141c;
+  border: 1px solid #232936;
+  border-radius: 10px;
+  padding: 12px 12px 6px 12px;
+  box-sizing: border-box;
+}
+
+.forgetting-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* Chart Point styling */
+.chart-point {
+  cursor: pointer;
+  transition: transform 0.2s ease, r 0.2s ease;
+}
+
+.chart-point:hover {
+  r: 8px;
+}
+
+.chart-point-critical {
+  animation: pulse-critical 2s infinite ease-in-out;
+}
+
+@keyframes pulse-critical {
+  0% {
+    r: 6px;
+    stroke-opacity: 0.8;
+  }
+  50% {
+    r: 8.5px;
+    stroke-opacity: 0.3;
+  }
+  100% {
+    r: 6px;
+    stroke-opacity: 0.8;
+  }
+}
+
+/* Legend below chart */
+.forgetting-legend-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: #94a3b8;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.forgetting-legend-items {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.forgetting-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.forgetting-curve-sample {
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+/* Problem Detail Drawer */
+.forgetting-problem-drawer {
+  margin-top: 18px;
+  background: #141822;
+  border: 1px solid #27303f;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.forgetting-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.forgetting-drawer-header h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.forgetting-problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.forgetting-problem-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.forgetting-problem-grid::-webkit-scrollbar-thumb {
+  background: #2e3748;
+  border-radius: 4px;
+}
+
+.forgetting-card {
+  background: #1a202c;
+  border: 1px solid #2d3748;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s;
+}
+
+.forgetting-card:hover {
+  border-color: #4a5568;
+}
+
+.forgetting-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.forgetting-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f8fafc;
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+.forgetting-card-title:hover {
+  color: #60a5fa;
+}
+
+.forgetting-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+  flex-wrap: wrap;
+}
+
+.forgetting-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forgetting-bar-bg {
+  flex: 1;
+  background: #292e39;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.forgetting-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.forgetting-bar-label {
+  font-size: 11px;
+  font-weight: 700;
+  width: 32px;
+  text-align: right;
+}
+
+.forgetting-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recall-group {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.recall-btn {
+  border: none;
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.recall-btn:hover {
+  opacity: 0.85;
+}
+
+/* Tooltip on SVG hover */
+.forgetting-tooltip {
+  position: fixed;
+  background: #090d16;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #f8fafc;
+  font-size: 12px;
+  pointer-events: none;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+  transform: translate(-50%, -115%);
+  z-index: 1000;
+  max-width: 260px;
+}

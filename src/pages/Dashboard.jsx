@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { getStats, markRevised, addGoal } from '../services/api'
 import AICoachModal from '../components/AICoachModal'
 import PortfolioModal from '../components/PortfolioModal'
+import ActivityHeatmap from '../components/ActivityHeatmap'
+import ForgettingCurve from '../components/ForgettingCurve'
 import './Dashboard.css'
 
 function Dashboard() {
@@ -255,6 +257,12 @@ function Dashboard() {
         </div>
       </div>
 
+      {/* 365-Day Activity Heatmap */}
+      <ActivityHeatmap
+        heatmapData={stats.activityHeatmap}
+        streak={stats.streak}
+      />
+
       <div className="panel" style={{ marginBottom: 32 }}>
         <h3>This Week</h3>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
@@ -283,6 +291,17 @@ function Dashboard() {
           Longest streak: {stats.streak.longest} day{stats.streak.longest === 1 ? "" : "s"}
         </p>
       </div>
+
+      {/* Interactive Ebbinghaus Forgetting Curve Graph */}
+      {stats.retentionGraph && (
+        <ForgettingCurve
+          retentionData={stats.retentionGraph}
+          onRevise={handleReviseFromDue}
+          onAddGoal={handleAddGoalFromDue}
+          addedGoals={addedGoals}
+        />
+      )}
+
       {stats.weakTopic && (
         <div className="panel" style={{ marginBottom: 32, borderColor: "#eab308" }}>
           <h3>💡 Focus Area</h3>
