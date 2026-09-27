@@ -35,7 +35,10 @@ A full-stack MERN application for tracking coding practice and DSA (Data Structu
 - **Dynamic search & filtering** — debounced title search, plus filter dropdowns for topic, pattern, difficulty, and status that are generated from your own data rather than a fixed list, so they grow as your tagging vocabulary does
 - **Coding streak tracking** — current streak, longest streak, and a 7-day activity row, computed from actual problem-logging dates
 - **Weak-topic insight** — automatically surfaces the topic with your lowest solve rate (among topics with enough attempts to be meaningful) as a focus-area suggestion
-- **Customizable revision reminders** — set your own revision interval (in days) per problem, mark a problem as revised, and see what's due next on both the Problems page and the Dashboard
+- **Customizable revision reminders & SuperMemo-2 (SM-2)** — set your own revision interval (in days) per problem, mark a problem as revised with 4-grade active recall (Again, Hard, Good, Easy) which adaptively recalculates memory stability and intervals
+- **📈 365-Day Activity Heatmap** — 53-week GitHub-style emerald calendar grid tracking daily problem-solving and revision consistency over the entire year, with 5 emerald intensity levels, hover tooltips, and streak metrics
+- **🧠 Interactive Ebbinghaus Forgetting Curve Graph** — mathematical retention modeling ($R = e^{-t / (S \times 1.5)}$) charting active recall decay across 30 days, SuperMemo-2 stability curves, critical threshold alerts, pulsing at-risk problem nodes, and instant 1-click active recall grading
+- **🎯 Quantified DSA Readiness Score & PDF Portfolio Export** — 0-100 interview readiness index evaluating problem volume, 7 core algorithmic pillars, and memory retention consistency, with 1-click printable A4 PDF export for job applications
 - **Progress dashboard** — total solved/attempted counts, breakdowns by difficulty/topic/pattern, streak, focus area, due-for-revision list, and a recent-activity feed
 - **Landing page** — an animated, 3D-tilt hero page shown to logged-out visitors, separate from the authenticated Dashboard
 - **Persistent sessions** — stays logged in across page refreshes via localStorage
