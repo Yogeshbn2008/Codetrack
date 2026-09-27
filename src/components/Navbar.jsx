@@ -9,7 +9,10 @@ function Navbar({ user, onLogout }) {
   return (
     <>
       <nav className="navbar">
-        <Link to="/" className="navbar-logo">⚡ CodeTrack</Link>
+        <Link to="/" className="navbar-logo" style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}>
+          <img src="/logo.png" alt="CodeTrack" style={{ width: 26, height: 26, borderRadius: 6, objectFit: 'cover' }} />
+          <span>CodeTrack</span>
+        </Link>
         <div className="navbar-links">
           {user && (
             <>

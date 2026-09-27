@@ -83,7 +83,7 @@ function PortfolioModal({ isOpen, onClose }) {
             {/* Header */}
             <header className="portfolio-header">
               <div className="portfolio-brand">
-                <div className="portfolio-logo">⚡</div>
+                <img src="/logo.png" alt="CodeTrack" style={{ width: 42, height: 42, borderRadius: 8, objectFit: 'cover' }} />
                 <div>
                   <h1 className="portfolio-app-title">CodeTrack</h1>
                   <span className="portfolio-app-subtitle">Verified DSA Competency Report</span>
