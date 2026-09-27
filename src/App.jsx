@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import { getProblems, addProblem as apiAddProblem, updateProblem as apiUpdateProblem, deleteProblem as apiDeleteProblem } from './services/api'
 import Landing from './pages/Landing'
+import DailyGoalsPage from './pages/DailyGoalsPage'
 
 // ProtectedRoute Guard Component
 const ProtectedRoute = ({ token, children }) => {
@@ -79,6 +80,14 @@ function App() {
           element={
             <ProtectedRoute token={token}>
               <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/goals" 
+          element={
+            <ProtectedRoute token={token}>
+              <DailyGoalsPage />
             </ProtectedRoute>
           } 
         />

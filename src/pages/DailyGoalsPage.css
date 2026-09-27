@@ -1,0 +1,67 @@
+.daily-goals-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.goals-page-header {
+  margin-bottom: 28px;
+}
+
+.goals-page-header h2 {
+  margin: 0 0 6px 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.goals-page-header p {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 14px;
+}
+
+.goals-strategy-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.strategy-card {
+  background: #181c25;
+  border: 1px solid #292e39;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.strategy-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.strategy-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.strategy-content p {
+  margin: 0;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .goals-strategy-cards {
+    grid-template-columns: 1fr;
+  }
+}

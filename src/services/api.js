@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://codetrack-server.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://codetrack-server.onrender.com';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -78,6 +78,40 @@ export const markRevised = async (id) => {
 
 export const getFilterOptions = async () => {
   const res = await api.get('/api/problems/meta/options');
+  return res.data;
+};
+
+// --- Daily Goals API ---
+export const getDailyGoalsOverview = async (today, tomorrow) => {
+  const params = new URLSearchParams();
+  if (today) params.append('today', today);
+  if (tomorrow) params.append('tomorrow', tomorrow);
+  const res = await api.get(`/api/goals/daily-overview?${params.toString()}`);
+  return res.data;
+};
+
+export const addGoal = async (goalData) => {
+  const res = await api.post('/api/goals', goalData);
+  return res.data;
+};
+
+export const toggleGoal = async (id) => {
+  const res = await api.patch(`/api/goals/${id}/toggle`, {});
+  return res.data;
+};
+
+export const updateGoal = async (id, updatedData) => {
+  const res = await api.put(`/api/goals/${id}`, updatedData);
+  return res.data;
+};
+
+export const deleteGoal = async (id) => {
+  const res = await api.delete(`/api/goals/${id}`);
+  return res.data;
+};
+
+export const rolloverGoals = async (today) => {
+  const res = await api.post('/api/goals/rollover', { today });
   return res.data;
 };
 

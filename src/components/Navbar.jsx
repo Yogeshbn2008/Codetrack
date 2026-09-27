@@ -9,6 +9,7 @@ function Navbar({ user, onLogout }) {
         {user && (
           <>
             <Link to="/dashboard">Dashboard</Link>
+            <Link to="/goals">🎯 Daily Goals</Link>
             <Link to="/problems">Problems</Link>
             <Link to="/add">Add Problem</Link>
           </>

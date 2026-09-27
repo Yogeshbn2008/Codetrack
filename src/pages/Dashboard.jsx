@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { getStats } from '../services/api'
 import './Dashboard.css'
 
@@ -15,9 +16,30 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-welcome">
-        <h2>Welcome back 👋</h2>
-        <p>Keep solving. Keep improving.</p>
+      <div className="dashboard-welcome" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h2>Welcome back 👋</h2>
+          <p>Keep solving. Keep improving.</p>
+        </div>
+        <Link 
+          to="/goals" 
+          style={{ 
+            textDecoration: 'none', 
+            background: '#1e2330', 
+            color: '#f8fafc', 
+            border: '1px solid #333948', 
+            padding: '8px 16px', 
+            borderRadius: 8, 
+            fontSize: 13, 
+            fontWeight: 600, 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: 6,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+          }}
+        >
+          🎯 Daily Goals Planner →
+        </Link>
       </div>
 
       <div className="stats-grid">
